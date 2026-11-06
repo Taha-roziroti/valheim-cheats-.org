@@ -59,7 +59,7 @@ Primary keyword column uses `scripts/seo-keyword-data.mjs` where defined; otherw
 
 **Note:** Spelling in automated audit = `cspell` on `src/config/pageSeo.ts` and `src/data/valheimContent.ts`. Full-site prose spell/grammar review beyond that scope is not a separate failing gate in `npm run audit`.
 
-**Last commit hash (consolidating commit):** `46f4501` (`git rev-parse HEAD` after commit).
+**Last commit hash (consolidating commit):** `548f032` (`git rev-parse HEAD` after commit).
 
 ---
 
