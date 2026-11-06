@@ -4,11 +4,15 @@ interface Props {
   title: string;
   desc?: string;
   titleId?: string;
+  /** Use h1 only for the page’s primary heading; sections default to h2 (one h1 per page). */
+  heading?: 'h1' | 'h2';
   centered?: boolean;
   wide?: boolean;
 }
 
-const { eyebrow, title, desc, titleId, centered = false, wide = false } = Astro.props;
+const { eyebrow, title, desc, titleId, heading = 'h2', centered = false, wide = false } = Astro.props;
+
+const HeadingTag = heading;
 ---
 
 <header
@@ -19,6 +23,6 @@ const { eyebrow, title, desc, titleId, centered = false, wide = false } = Astro.
   ]}
 >
   <p class="section-header__eyebrow">{eyebrow}</p>
-  <h1 id={titleId} class="section-header__title">{title}</h1>
+  <HeadingTag id={titleId} class="section-header__title">{title}</HeadingTag>
   {desc ? <p class="section-header__subtitle">{desc}</p> : null}
 </header>

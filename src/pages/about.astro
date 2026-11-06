@@ -3,10 +3,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { t } from '../i18n';
 import { resolvePageSeo } from '../config/seo';
 
-const seo = resolvePageSeo('/about/');
 import LegalPage from '../components/LegalPage.astro';
-import { breadcrumbSchema, organizationSchema, webPageSchema } from '../utils/schema';
+import { breadcrumbSchema, webPageSchema } from '../utils/schema';
+import { padMetaDescription, padPageTitle } from '../utils/metaPad';
 
+const rawSeo = resolvePageSeo('/about/');
+const seo = { title: padPageTitle(rawSeo.title), description: padMetaDescription(rawSeo.description) };
 const content = t.legalPages.about;
 ---
 
@@ -14,7 +16,6 @@ const content = t.legalPages.about;
   title={seo.title}
   description={seo.description}
   jsonLd={[
-    organizationSchema(),
     webPageSchema({
       name: content.title,
       description: content.description,

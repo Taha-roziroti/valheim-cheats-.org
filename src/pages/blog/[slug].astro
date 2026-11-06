@@ -23,6 +23,8 @@ import { Button } from '@/components/starwind/button';
 import { Prose } from '@/components/starwind/prose';
 import BlogPostCta from '../../components/BlogPostCta.astro';
 import { normalizeInternalPath, ROUTES } from '../../utils/path';
+import { padMetaDescription, padPageTitle } from '../../utils/metaPad';
+import { defaultWebpSrc, DEFAULT_IMAGE_WIDTHS } from '../../utils/responsiveImage';
 
 export function getStaticPaths() {
   return getAllBlogSlugs().map((slug) => ({ params: { slug } }));
@@ -50,10 +52,10 @@ function linkify(text: string): string {
       const normalized = normalizeInternalPath(href);
       return `<a href="${normalized}">${label}</a>`;
     })
-    .replace(/(https:\/\/dotacheats\.com[^\s.,;)]*)/g, (_match, url: string) => {
-      const path = url.replace(/^https:\/\/dotacheats\.com/, '');
+    .replace(/(https:\/\/valheimcheats\.org[^\s.,;)]*)/g, (_match, url: string) => {
+      const path = url.replace(/^https:\/\/valheimcheats\.org/, '');
       const normalized = normalizeInternalPath(path);
-      const href = normalized.startsWith('http') ? normalized : `https://dotacheats.com${normalized}`;
+      const href = normalized.startsWith('http') ? normalized : `https://valheimcheats.org${normalized}`;
       return `<a href="${href}">${url}</a>`;
     });
 }
@@ -65,13 +67,14 @@ function slugify(text: string): string {
     .replace(/^-|-$/g, '');
 }
 const published = parseBlogDate(post.date);
+const socialImagePath = defaultWebpSrc(post.image, [...DEFAULT_IMAGE_WIDTHS]);
 ---
 
 <BaseLayout
-  title={pageTitle(post.title)}
-  description={post.desc}
+  title={padPageTitle(pageTitle(post.title))}
+  description={padMetaDescription(post.desc)}
   ogType="article"
-  ogImage={post.image}
+  ogImage={socialImagePath}
   ogImageAlt={post.title}
   articlePublishedTime={published}
   articleModifiedTime={published}
@@ -80,7 +83,7 @@ const published = parseBlogDate(post.date);
       name: post.title,
       description: post.desc,
       url: postPath,
-      image: post.image,
+      image: socialImagePath,
       datePublished: published,
     }),
     breadcrumbSchema(breadcrumbs),
@@ -179,7 +182,14 @@ const published = parseBlogDate(post.date);
           </Prose>
 
           <nav class="blog-article__actions" aria-label="Continue reading">
-            <Button as="a" href={checkoutPath('dota2')} variant="primary" aria-label={t.ui.checkoutAria}>
+            <Button
+              as="a"
+              href={checkoutPath('dota2')}
+              variant="primary"
+              aria-label={t.ui.checkoutAria}
+              rel="sponsored noopener noreferrer"
+              target="_blank"
+            >
               Buy Dota 2 Cheats
               <Icon name="arrowRight" size={17} />
             </Button>

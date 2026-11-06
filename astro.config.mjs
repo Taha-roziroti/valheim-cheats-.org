@@ -4,9 +4,11 @@ import sitemap from '@astrojs/sitemap';
 import { sitemapSerialize } from './src/config/sitemap.ts';
 
 export default defineConfig({
-  site: 'https://dotacheats.com',
+  site: 'https://valheimcheats.org',
   trailingSlash: 'always',
   redirects: {
+    '/products/dota-2-cheats/lite/': '/products/dota-2-cheats/',
+    '/products/dota-2-cheats/pro/': '/products/dota-2-cheats/',
     '/cheats/': '/products/dota-2-cheats/',
     '/cheats/lite/': '/products/dota-2-cheats/',
     '/cheats/pro/': '/products/dota-2-cheats/',
@@ -26,6 +28,12 @@ export default defineConfig({
     sitemap({
       filter: (page) => !page.includes('/404') && !page.includes('/go/'),
       serialize: sitemapSerialize,
+      namespaces: {
+        xhtml: false,
+        news: false,
+        image: true,
+        video: true,
+      },
     }),
   ],
   vite: {

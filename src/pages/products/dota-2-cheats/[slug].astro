@@ -4,6 +4,7 @@ import { getAllProductSlugs, getProductPage, productHub } from '../../../data/pr
 import { pageTitle } from '../../../config/seo';
 import { breadcrumbSchema, productSchema } from '../../../utils/schema';
 import ProductDetail from '../../../components/ProductDetail.astro';
+import { padMetaDescription, padPageTitle } from '../../../utils/metaPad';
 
 export function getStaticPaths() {
   return getAllProductSlugs().map((slug) => ({ params: { slug } }));
@@ -25,8 +26,8 @@ const breadcrumbs = [
 ---
 
 <BaseLayout
-  title={pageTitle(product.title)}
-  description={product.desc}
+  title={padPageTitle(pageTitle(product.title))}
+  description={padMetaDescription(product.desc)}
   jsonLd={[
     productSchema({
       name: product.title,

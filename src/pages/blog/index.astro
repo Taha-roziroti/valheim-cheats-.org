@@ -18,8 +18,10 @@ import { blogTagIcons } from '../../data/sectionIcons';
 import type { IconName } from '../../components/icons/types';
 import { Button } from '@/components/starwind/button';
 import { ROUTES } from '../../utils/path';
+import { padMetaDescription, padPageTitle } from '../../utils/metaPad';
 
-const seo = resolvePageSeo('/blog/');
+const rawSeo = resolvePageSeo('/blog/');
+const seo = { title: padPageTitle(rawSeo.title), description: padMetaDescription(rawSeo.description) };
 const breadcrumbs = [
   { name: 'Home', path: '/' },
   { name: 'Blog', path: '/blog/' },
@@ -50,6 +52,7 @@ const tagIcon = (tag: string): IconName => blogTagIcons[tag] ?? 'tag';
   <section class="py-8 md:py-12">
     <div class="mx-auto max-w-6xl px-5">
       <Breadcrumbs items={breadcrumbs} />
+      <h1 class="sr-only">{seo.title}</h1>
       {featured && <BlogCard post={featured} index={0} eager showDate layout="featured" />}
     </div>
   </section>
@@ -58,7 +61,7 @@ const tagIcon = (tag: string): IconName => blogTagIcons[tag] ?? 'tag';
     <div class="mx-auto max-w-6xl px-5">
       <header class="section-header max-w-2xl">
         <p class="section-header__eyebrow">{t.blog.eyebrow}</p>
-        <h1 id="blog-latest-title" class="section-header__title">{t.blog.latestTitle}</h1>
+        <h2 id="blog-latest-title" class="section-header__title">{t.blog.latestTitle}</h2>
         <p class="section-header__subtitle">{t.blog.latestSubtitle}</p>
       </header>
 

@@ -12,6 +12,7 @@ interface Props {
   items: SiteFaqItem[];
   id?: string;
   titleId?: string;
+  sectionHeading?: 'h1' | 'h2';
   class?: string;
   /** Full /faq/ experience — all topics chip bar */
   variant?: 'full' | 'contextual';
@@ -22,10 +23,13 @@ const {
   items,
   id,
   titleId = 'faq-heading',
+  sectionHeading: sectionHeadingProp,
   class: className,
   variant = 'contextual',
   filterTopics: filterTopicsProp,
 } = Astro.props;
+
+const sectionHeading = sectionHeadingProp ?? (variant === 'full' ? 'h1' : 'h2');
 
 const copy = variant === 'full' ? SITE_FAQ_SECTION_COPY : CONTEXTUAL_FAQ_SECTION_COPY;
 const filterTopics =
@@ -39,6 +43,7 @@ const showFilters = filterTopics.length > 1;
   eyebrow={copy.eyebrow}
   title={copy.title}
   subtitle={copy.subtitle}
+  sectionHeading={sectionHeading}
   titleId={titleId}
   showFilters={showFilters}
   filterTopics={filterTopics}

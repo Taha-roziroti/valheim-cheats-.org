@@ -14,6 +14,8 @@ interface Props {
   eyebrow?: string;
   title?: string;
   subtitle?: string;
+  /** h1 only on /faq/ hero; FAQ blocks inside articles use h2 */
+  sectionHeading?: 'h1' | 'h2';
   titleId?: string;
   showFilters?: boolean;
   filterTopics?: FaqTopic[];
@@ -29,6 +31,7 @@ const {
   eyebrow = 'FAQ',
   title = 'Straight answers before checkout.',
   subtitle = 'Compatibility, bans and access—no vague promises.',
+  sectionHeading = 'h2',
   titleId = 'faq-heading',
   showFilters = false,
   filterTopics,
@@ -65,6 +68,7 @@ const filters = filterTopics ?? (['all', 'plans', 'esp', 'scripts', 'safety', 'p
       title={title}
       desc={subtitle}
       titleId={titleId}
+      heading={sectionHeading}
       centered={centered}
     />
 

@@ -1,8 +1,11 @@
 import type { SitemapItem } from '@astrojs/sitemap';
 import { blogPosts } from '../data/blog';
 import { parseBlogDate } from '../utils/schema';
+import { SITE_HOST } from '../data/siteIdentity';
 
 const buildDate = new Date().toISOString();
+
+const ogImageUrl = `https://${SITE_HOST}/og/default.jpg`;
 
 const blogLastmod = new Map(
   blogPosts.map((post) => [`/blog/${post.slug}/`, parseBlogDate(post.date)] as const),
@@ -21,9 +24,27 @@ export function sitemapSerialize(item: SitemapItem): SitemapItem | undefined {
   }
 
   item.lastmod = buildDate;
+  item.img = [{ url: ogImageUrl, caption: 'ValheimCheats', title: 'ValheimCheats default share image' }];
 
   if (path === '/') {
     item.priority = 1;
+    item.changefreq = 'weekly';
+    return item;
+  }
+
+  if (
+    path === '/valheim-esp/' ||
+    path === '/valheim-cheats-pricing/' ||
+    path === '/valheim-cloud-dma/' ||
+    path === '/valheim-console-commands/'
+  ) {
+    item.priority = 0.9;
+    item.changefreq = 'weekly';
+    return item;
+  }
+
+  if (path === '/dota/') {
+    item.priority = 0.85;
     item.changefreq = 'weekly';
     return item;
   }

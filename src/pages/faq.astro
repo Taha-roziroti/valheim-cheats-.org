@@ -6,8 +6,10 @@ import { breadcrumbSchema, faqPageSchema, webPageSchema } from '../utils/schema'
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import SiteFaqSection from '../components/SiteFaqSection.astro';
 import SectionHeader from '../components/SectionHeader.astro';
+import { padMetaDescription, padPageTitle } from '../utils/metaPad';
 
-const seo = resolvePageSeo('/faq/');
+const rawSeo = resolvePageSeo('/faq/');
+const seo = { title: padPageTitle(rawSeo.title), description: padMetaDescription(rawSeo.description) };
 const breadcrumbs = [
   { name: 'Home', path: '/' },
   { name: 'FAQ', path: '/faq/' },
@@ -21,9 +23,9 @@ const faqs = getAllFaqs();
   description={seo.description}
   jsonLd={[
     webPageSchema({
-      name: 'FAQ — Dota 2 Cheats & Products',
+      name: 'FAQ — ValheimCheats',
       description:
-        'Answers about Dota 2 cheat tiers, map hack, scripts, HWID tools, blog guides and checkout at dotacheats.com.',
+        'Answers about Valheim ESP, pricing, Cloud DMA, cheat tiers, and checkout linked from valheimcheats.org.',
       url: '/faq/',
     }),
     faqPageSchema(faqs.map((f, i) => ({ num: String(i + 1).padStart(2, '0'), q: f.q, a: f.a.replace(/<[^>]+>/g, '') }))),
@@ -39,10 +41,11 @@ const faqs = getAllFaqs();
           title="FAQ for cheats, products & guides"
           desc="Everything about Lite, Pro, Elite tiers, utilities, safety and blog topics—in one place."
           titleId="faq-page-title"
+          heading="h1"
         />
       </div>
     </div>
   </section>
 
-  <SiteFaqSection items={faqs} variant="full" titleId="faq-page-list" />
+  <SiteFaqSection items={faqs} variant="full" titleId="faq-page-list" sectionHeading="h2" />
 </BaseLayout>

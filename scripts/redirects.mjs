@@ -22,9 +22,13 @@ export const PATH_REDIRECTS = new Map([
   ['/products/dota-2-cheats', '/products/dota-2-cheats/'],
   ['/products/dota-2-cheats/account-recovery', '/products/dota-2-cheats/ugc/'],
   ['/products/dota-2-cheats/account-recovery/', '/products/dota-2-cheats/ugc/'],
+  ['/products/dota-2-cheats/lite', '/products/dota-2-cheats/'],
+  ['/products/dota-2-cheats/lite/', '/products/dota-2-cheats/'],
+  ['/products/dota-2-cheats/pro', '/products/dota-2-cheats/'],
+  ['/products/dota-2-cheats/pro/', '/products/dota-2-cheats/'],
 ]);
 
-/** Paths that should not receive a forced trailing slash. */
+/** Paths that should not receive a forced trailing slash (match static server). */
 export const TRAILING_SLASH_SKIP = /\.[a-z0-9]+$/i;
 
 export function resolvePathRedirect(pathname) {

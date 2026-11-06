@@ -2,10 +2,9 @@ import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
-import { resolvePathRedirect } from './redirects.mjs';
+import { resolvePathRedirect, TRAILING_SLASH_SKIP } from './redirects.mjs';
 import { resolveCheckoutPathRedirect } from '../src/config/checkout-redirects.mjs';
-
-const CANONICAL_HOST = 'dotacheats.com';
+import { SITE_HOST as CANONICAL_HOST } from './site-host.mjs';
 const distDir = path.resolve('dist');
 const port = Number(process.env.PORT) || 3000;
 
@@ -76,8 +75,11 @@ function splitUrl(url) {
 
 function resolveFile(pathname) {
   let normalized = decodeURIComponent(pathname);
+  if (normalized !== '/' && !normalized.endsWith('/') && !TRAILING_SLASH_SKIP.test(normalized)) {
+    normalized += '/';
+  }
   if (normalized.endsWith('/')) normalized += 'index.html';
-  if (!path.extname(normalized)) normalized += '.html';
+  else if (!path.extname(normalized)) normalized += '.html';
 
   const filePath = path.normalize(path.join(distDir, normalized));
   if (!filePath.startsWith(distDir)) return null;
@@ -166,7 +168,7 @@ const server = http.createServer((req, res) => {
   const { pathname, query, fragment } = splitUrl(req.url);
   const checkoutRedirect = resolveCheckoutPathRedirect(pathname);
   if (checkoutRedirect) {
-    res.writeHead(302, { Location: checkoutRedirect });
+    res.writeHead(301, { Location: checkoutRedirect });
     res.end();
     return;
   }

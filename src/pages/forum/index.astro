@@ -7,8 +7,10 @@ import { forumCategories, forumPosts } from '../../data/forum';
 import { blogPosts, getBlogPostTimestamp } from '../../data/blog';
 import { resolvePageSeo } from '../../config/seo';
 import { breadcrumbSchema, collectionPageSchema } from '../../utils/schema';
+import { padMetaDescription, padPageTitle } from '../../utils/metaPad';
 
-const seo = resolvePageSeo('/forum/');
+const rawSeo = resolvePageSeo('/forum/');
+const seo = { title: padPageTitle(rawSeo.title), description: padMetaDescription(rawSeo.description) };
 const breadcrumbs = [{ name: 'Home', path: '/' }, { name: 'Forum', path: '/forum/' }];
 const categoryKey = (name: string) => name.toLowerCase().replace(/[^a-z0-9]/g, '');
 const sourceTimestamp = (path?: string) => {
@@ -50,9 +52,9 @@ const sourceTimestamp = (path?: string) => {
           </div>
 
           <div class="forum-category-filters" role="group" aria-label="Filter discussions by topic">
-            <button type="button" class="is-active" data-forum-filter="all" aria-pressed="true"><Icon name="layers" size={14} /> All topics</button>
+            <button type="button" id="forum-category-all" class="is-active" data-forum-filter="all" aria-pressed="true"><Icon name="layers" size={14} /> All topics</button>
             {forumCategories.map((category) => (
-              <button type="button" data-forum-filter={categoryKey(category.name)} aria-pressed="false"><Icon name={category.icon} size={14} /> {category.name}</button>
+              <button type="button" id={categoryKey(category.name)} data-forum-filter={categoryKey(category.name)} aria-pressed="false"><Icon name={category.icon} size={14} /> {category.name}</button>
             ))}
           </div>
           <p class="forum-results-count" data-forum-visible-count>{forumPosts.length} guide discussions</p>
@@ -106,7 +108,7 @@ const sourceTimestamp = (path?: string) => {
             <h2 class="forum-side-heading">Communities</h2>
             <ul class="forum-community-list">
               {forumCategories.map((category, index) => (
-                <li><a href={`/forum/?category=${categoryKey(category.name)}`}><span class={`forum-community-avatar tone-${category.tone}`} aria-hidden="true"><Icon name={category.icon} size={15} /></span><span><b>{category.name}</b><small>Browse related Q&amp;A</small></span><Icon name="chevronRight" size={15} /></a></li>
+                <li><a href={`/forum/#${categoryKey(category.name)}`}><span class={`forum-community-avatar tone-${category.tone}`} aria-hidden="true"><Icon name={category.icon} size={15} /></span><span><b>{category.name}</b><small>Browse related Q&amp;A</small></span><Icon name="chevronRight" size={15} /></a></li>
               ))}
             </ul>
             <a class="forum-text-link" href="#communities">Browse all communities <Icon name="arrowRight" size={14} /></a>
@@ -137,7 +139,11 @@ const sourceTimestamp = (path?: string) => {
     const nextButton = document.querySelector<HTMLButtonElement>('[data-page-next]');
     const pageSize = 20;
     let currentPage = 1;
-    let activeFilter = new URLSearchParams(window.location.search).get('category') ?? 'all';
+    function filterFromHash() {
+      const h = window.location.hash.replace(/^#/, '').trim();
+      return h || 'all';
+    }
+    let activeFilter = filterFromHash();
 
     function updateForum() {
       const sort = sortButtons.find((button) => button.getAttribute('aria-pressed') === 'true')?.dataset.forumSort ?? 'popular';
@@ -199,6 +205,11 @@ const sourceTimestamp = (path?: string) => {
 
     filterButtons.forEach((button) => button.addEventListener('click', () => {
       activeFilter = button.dataset.forumFilter ?? 'all';
+      if (activeFilter === 'all') {
+        window.location.hash = '';
+      } else {
+        window.location.hash = activeFilter;
+      }
       filterButtons.forEach((item) => {
         const active = item === button;
         item.classList.toggle('is-active', active);
@@ -207,6 +218,18 @@ const sourceTimestamp = (path?: string) => {
       currentPage = 1;
       updateForum();
     }));
+
+    window.addEventListener('hashchange', () => {
+      activeFilter = filterFromHash();
+      const next = filterButtons.find((b) => (b.dataset.forumFilter ?? 'all') === activeFilter);
+      filterButtons.forEach((item) => {
+        const active = item === next || (!next && (item.dataset.forumFilter ?? 'all') === 'all');
+        item.classList.toggle('is-active', active);
+        item.setAttribute('aria-pressed', String(active));
+      });
+      currentPage = 1;
+      updateForum();
+    });
 
     searchInput?.addEventListener('input', () => {
       currentPage = 1;
@@ -221,7 +244,7 @@ const sourceTimestamp = (path?: string) => {
       updateForum();
     });
 
-    const initialFilter = filterButtons.find((button) => button.dataset.forumFilter === activeFilter);
+    const initialFilter = filterButtons.find((button) => (button.dataset.forumFilter ?? 'all') === activeFilter);
     if (initialFilter) {
       filterButtons.forEach((item) => {
         const active = item === initialFilter;

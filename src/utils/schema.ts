@@ -1,6 +1,7 @@
 import type { FaqItem } from '../i18n/types';
-import { SUPPORT_EMAIL } from '../config/site';
-import { SITE_ORIGIN, absoluteAssetUrl, canonicalUrl, getOrganizationSameAs } from '../config/seo';
+import { SITE_BRAND_NAME, SUPPORT_EMAIL } from '../config/site';
+import { DEFAULT_OG_IMAGE, SITE_ORIGIN, absoluteAssetUrl, canonicalUrl, getOrganizationSameAs } from '../config/seo';
+import { SITE_PURPOSE, SITE_KNOWS_ABOUT } from '../data/siteIdentity';
 
 export interface BreadcrumbItem {
   name: string;
@@ -20,15 +21,21 @@ export function breadcrumbSchema(items: BreadcrumbItem[]) {
   };
 }
 
+const organizationId = () => `${SITE_ORIGIN}/#organization`;
+const websiteId = () => `${SITE_ORIGIN}/#website`;
+/** Shared product @id for Valheim ESP (home + product page). */
+export const valheimProductId = () => `${SITE_ORIGIN}/#product`;
+
 export function websiteSchema() {
   return {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: 'DotaCheats',
+    '@id': websiteId(),
+    name: SITE_BRAND_NAME,
     url: `${SITE_ORIGIN}/`,
     inLanguage: 'en-US',
-    description:
-      'Dota 2 cheats with scripts, map hack, zoom hack, Skin Changer and ranked-safe tiers for PC.',
+    description: SITE_PURPOSE,
+    publisher: { '@id': organizationId() },
   };
 }
 
@@ -38,10 +45,12 @@ export function organizationSchema() {
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: 'DotaCheats',
+    '@id': organizationId(),
+    name: SITE_BRAND_NAME,
     url: `${SITE_ORIGIN}/`,
     logo: `${SITE_ORIGIN}/logo.svg`,
     email: SUPPORT_EMAIL,
+    knowsAbout: [...SITE_KNOWS_ABOUT],
     ...(sameAs.length > 0 ? { sameAs } : {}),
     contactPoint: [
       {
@@ -56,6 +65,35 @@ export function organizationSchema() {
   };
 }
 
+/**
+ * Single JSON-LD payload with Organization + WebSite (shared @id graph).
+ * Use on pages that do not need additional graph nodes.
+ */
+export function siteIdentityGraph() {
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [organizationSchema(), websiteSchema()].map((node) => {
+      const { '@context': _c, ...rest } = node;
+      return rest;
+    }),
+  };
+}
+
+/** Valheim ESP product node — referenced from home and /valheim-esp/ with the same @id. */
+export function valheimProductSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    '@id': valheimProductId(),
+    name: 'Valheim ESP',
+    description:
+      'ESP visibility for Valheim on Windows PC: player, ore, boss, ship, and creature markers plus a stream-proof overlay. Cloud DMA required for full functionality on supported builds.',
+    url: canonicalUrl('/valheim-esp/'),
+    brand: { '@type': 'Brand', name: SITE_BRAND_NAME },
+    image: absoluteAssetUrl(DEFAULT_OG_IMAGE),
+  };
+}
+
 export function collectionPageSchema(input: { name: string; description: string; url: string }) {
   return {
     '@context': 'https://schema.org',
@@ -66,7 +104,8 @@ export function collectionPageSchema(input: { name: string; description: string;
     inLanguage: 'en-US',
     isPartOf: {
       '@type': 'WebSite',
-      name: 'DotaCheats',
+      '@id': websiteId(),
+      name: SITE_BRAND_NAME,
       url: `${SITE_ORIGIN}/`,
     },
   };
@@ -82,7 +121,8 @@ export function webPageSchema(input: { name: string; description: string; url: s
     inLanguage: 'en-US',
     isPartOf: {
       '@type': 'WebSite',
-      name: 'DotaCheats',
+      '@id': websiteId(),
+      name: SITE_BRAND_NAME,
       url: `${SITE_ORIGIN}/`,
     },
   };
@@ -131,7 +171,11 @@ export function discussionForumPostingSchema(input: {
     url: canonicalUrl(input.url),
     author: { '@type': 'Person', name: input.author },
     commentCount: input.comments,
-    isPartOf: { '@type': 'CollectionPage', name: 'DotaCheats Community Forum', url: canonicalUrl('/forum/') },
+    isPartOf: {
+      '@type': 'CollectionPage',
+      name: `${SITE_BRAND_NAME} Community Forum`,
+      url: canonicalUrl('/forum/'),
+    },
   };
 }
 
@@ -156,7 +200,7 @@ export function productSchema(input: {
     sku: input.sku ?? input.url.replace(/\//g, '-'),
     brand: {
       '@type': 'Brand',
-      name: 'DotaCheats',
+      name: SITE_BRAND_NAME,
     },
     ...(input.image ? { image: absoluteAssetUrl(input.image) } : {}),
     offers: {
@@ -166,7 +210,7 @@ export function productSchema(input: {
       availability: 'https://schema.org/InStock',
       seller: {
         '@type': 'Organization',
-        name: 'DotaCheats',
+        name: SITE_BRAND_NAME,
       },
     },
   };
@@ -209,11 +253,11 @@ export function articleSchema(input: {
     inLanguage: 'en-US',
     author: {
       '@type': 'Organization',
-      name: 'DotaCheats',
+      name: SITE_BRAND_NAME,
     },
     publisher: {
       '@type': 'Organization',
-      name: 'DotaCheats',
+      name: SITE_BRAND_NAME,
       logo: {
         '@type': 'ImageObject',
         url: `${SITE_ORIGIN}/logo.svg`,

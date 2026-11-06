@@ -256,6 +256,13 @@ export interface Translations {
     browseCheatsMobile: string;
     homeAria: string;
     checkoutAria: string;
+    checkoutChooseTitle: string;
+    checkoutChooseDescription: string;
+    checkoutOptionValheim: string;
+    checkoutOptionCloudDma: string;
+    checkoutOptionHwid: string;
+    checkoutAffiliateDisclosure: string;
+    dialogClose: string;
     discordAria: string;
     menuOpen: string;
     menuClose: string;

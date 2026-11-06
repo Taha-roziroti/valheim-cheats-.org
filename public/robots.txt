@@ -3,6 +3,11 @@ Allow: /
 
 Disallow: /go/
 
-Sitemap: https://dotacheats.com/sitemap.xml
+User-agent: Googlebot
+Allow: /
 
-# RSS: https://dotacheats.com/rss.xml
+Disallow: /go/
+
+Sitemap: https://valheimcheats.org/sitemap.xml
+
+# RSS: https://valheimcheats.org/rss.xml

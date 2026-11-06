@@ -1,0 +1,21 @@
+/* Human-readable sitemap.xml in supporting browsers */
+urlset {
+  display: block;
+  font-family: system-ui, sans-serif;
+  padding: 1rem;
+}
+url {
+  display: block;
+  margin-bottom: 0.75rem;
+}
+loc {
+  font-weight: 600;
+}
+priority,
+changefreq,
+lastmod {
+  display: inline-block;
+  margin-right: 0.75rem;
+  color: #555;
+  font-size: 0.85rem;
+}

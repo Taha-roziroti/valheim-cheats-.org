@@ -1,6 +1,6 @@
 ---
 import { t } from '../i18n';
-import { checkoutPath } from '../config/checkout';
+import { checkoutPath, type CheckoutProduct } from '../config/checkout';
 import { Button } from '@/components/starwind/button';
 import AnimatedThemeSwitch from './AnimatedThemeSwitch.astro';
 import {
@@ -15,15 +15,51 @@ import SlideRevealButton from './SlideRevealButton.astro';
 
 import type { IconName } from './icons/types';
 
+interface Props {
+  pathname: string;
+}
+
+const { pathname: pathnameRaw } = Astro.props;
+
+function normalizePath(path: string): string {
+  let p = path || '/';
+  if (!p.startsWith('/')) p = `/${p}`;
+  if (p !== '/' && !p.endsWith('/')) p = `${p}/`;
+  return p;
+}
+
+const pathname = normalizePath(pathnameRaw);
+
 const navIcons: Record<string, IconName> = {
   Products: 'navProducts',
+  'Valheim ESP': 'navProducts',
+  Pricing: 'navFaq',
+  Console: 'navSupport',
+  'Dota hub': 'navProducts',
   Blog: 'navBlog',
   Forum: 'messageCircle',
   FAQ: 'navFaq',
   Support: 'navSupport',
 };
 
-const purchaseUrl = checkoutPath('dota2');
+function directCheckoutProduct(path: string): CheckoutProduct | undefined {
+  if (path === '/valheim-cloud-dma/') return 'cloudDma';
+  if (path === '/valheim-esp/') return 'valheim';
+  if (path.includes('/hwid-spoofer')) return 'hwidSpoofer';
+  return undefined;
+}
+
+const directProduct = directCheckoutProduct(pathname);
+const showChooser = directProduct === undefined;
+const purchaseHref = directProduct ? checkoutPath(directProduct) : checkoutPath('valheim');
+
+const chooserLinks: { product: CheckoutProduct; label: string }[] = [
+  { product: 'valheim', label: t.ui.checkoutOptionValheim },
+  { product: 'cloudDma', label: t.ui.checkoutOptionCloudDma },
+  { product: 'hwidSpoofer', label: t.ui.checkoutOptionHwid },
+];
+
+const dialogId = 'header-checkout-chooser';
 ---
 
 <header class="pointer-events-none fixed inset-x-0 top-0 z-50">
@@ -31,68 +67,186 @@ const purchaseUrl = checkoutPath('dota2');
     <div
       class="pointer-events-auto relative flex h-14 w-full max-w-6xl items-center justify-between gap-3 rounded-2xl border border-border/40 bg-background/35 px-4 text-foreground shadow-md shadow-black/5 backdrop-blur-2xl supports-[backdrop-filter]:bg-background/25 dark:border-white/10 dark:bg-background/20 dark:shadow-black/25 sm:px-5 lg:h-[3.75rem]"
     >
-    <a href="/" class="inline-flex min-w-0 items-center font-[family-name:var(--font-heading)] text-lg font-bold tracking-wide" aria-label={t.ui.homeAria}>
-      <span class="truncate" aria-hidden="true">Dota<span class="text-primary">Cheats</span></span>
-    </a>
+      <a href="/" class="inline-flex min-w-0 items-center font-[family-name:var(--font-heading)] text-lg font-bold tracking-wide" aria-label={t.ui.homeAria}>
+        <span class="truncate" aria-hidden="true">Valheim<span class="text-primary">Cheats</span></span>
+      </a>
 
-    <nav class="absolute left-1/2 hidden -translate-x-1/2 items-center gap-6 lg:flex" aria-label="Primary">
-      {t.nav.map((link) => (
-        <a
-          href={link.href}
-          class="nav-link inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-          data-nav-link
-          {...(link.scrollTarget ? { 'data-scroll-target': link.scrollTarget } : {})}
-        >
-          <Icon name={navIcons[link.label] ?? 'navFeatures'} size={16} />
-          {link.label}
-        </a>
-      ))}
-    </nav>
+      <nav class="absolute left-1/2 hidden -translate-x-1/2 items-center gap-6 lg:flex" aria-label="Primary">
+        {t.nav.map((link) => (
+          <a
+            href={link.href}
+            class="nav-link inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+            data-nav-link
+            {...(link.scrollTarget ? { 'data-scroll-target': link.scrollTarget } : {})}
+          >
+            <Icon name={navIcons[link.label] ?? 'navFeatures'} size={16} />
+            {link.label}
+          </a>
+        ))}
+      </nav>
 
-    <div class="flex items-center gap-2">
-      <div class="hidden items-center sm:flex">
-        <SlideRevealButton href={purchaseUrl} class="hidden lg:inline-flex" ariaLabel={t.ui.checkoutAria}>
-          {t.ui.browseCheats}
-        </SlideRevealButton>
-        <div class="nav-action-divider hidden items-center px-3 lg:flex" aria-hidden="true">
-          <span class="block h-9 w-px bg-border"></span>
-        </div>
-        <AnimatedThemeSwitch size="md" ariaLabel={t.ui.themeLight} class="inline-flex" />
-      </div>
-
-      <Sheet class="lg:hidden">
-        <SheetTrigger
-          class="inline-flex size-9 items-center justify-center rounded-lg border border-border/80 bg-background/50 text-foreground transition-colors hover:bg-muted lg:hidden"
-          aria-label={t.ui.menuOpen}
-        >
-          <Icon name="menu" size={20} />
-        </SheetTrigger>
-        <SheetContent side="right" class="flex w-[min(100vw-2rem,20rem)] flex-col gap-4">
-          <SheetHeader>
-            <SheetTitle>{t.site.name}</SheetTitle>
-          </SheetHeader>
-          <nav class="flex flex-col gap-1" aria-label="Mobile">
-            {t.nav.map((link) => (
-              <a
-                href={link.href}
-                class="nav-link flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-primary"
-                data-nav-link
-                {...(link.scrollTarget ? { 'data-scroll-target': link.scrollTarget } : {})}
+      <div class="flex items-center gap-2">
+        <div class="hidden items-center sm:flex">
+          {
+            showChooser ? (
+              <SlideRevealButton
+                as="button"
+                type="button"
+                class="hidden lg:inline-flex"
+                ariaLabel={t.ui.checkoutAria}
+                data-checkout-open={dialogId}
               >
-                <Icon name={navIcons[link.label] ?? 'navFeatures'} size={16} />
-                {link.label}
-              </a>
-            ))}
-          </nav>
-          <Button as="a" href={purchaseUrl} variant="primary" class="w-full justify-center" aria-label={t.ui.checkoutAria}>
-            {t.ui.browseCheatsMobile}
-          </Button>
-          <div class="flex justify-center pt-1">
-            <AnimatedThemeSwitch size="sm" ariaLabel={t.ui.themeLight} />
+                {t.ui.browseCheats}
+              </SlideRevealButton>
+            ) : (
+              <SlideRevealButton
+                href={purchaseHref}
+                class="hidden lg:inline-flex"
+                ariaLabel={t.ui.checkoutAria}
+                rel="sponsored noopener noreferrer"
+                target="_blank"
+              >
+                {t.ui.browseCheats}
+              </SlideRevealButton>
+            )
+          }
+          <div class="nav-action-divider hidden items-center px-3 lg:flex" aria-hidden="true">
+            <span class="block h-9 w-px bg-border"></span>
           </div>
-        </SheetContent>
-      </Sheet>
-    </div>
+          <AnimatedThemeSwitch size="md" ariaLabel={t.ui.themeLight} class="inline-flex" />
+        </div>
+
+        <Sheet class="lg:hidden">
+          <SheetTrigger
+            class="inline-flex size-9 items-center justify-center rounded-lg border border-border/80 bg-background/50 text-foreground transition-colors hover:bg-muted lg:hidden"
+            aria-label={t.ui.menuOpen}
+          >
+            <Icon name="menu" size={20} />
+          </SheetTrigger>
+          <SheetContent side="right" class="flex w-[min(100vw-2rem,20rem)] flex-col gap-4">
+            <SheetHeader>
+              <SheetTitle>{t.site.name}</SheetTitle>
+            </SheetHeader>
+            <nav class="flex flex-col gap-1" aria-label="Mobile">
+              {t.nav.map((link) => (
+                <a
+                  href={link.href}
+                  class="nav-link flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-primary"
+                  data-nav-link
+                  {...(link.scrollTarget ? { 'data-scroll-target': link.scrollTarget } : {})}
+                >
+                  <Icon name={navIcons[link.label] ?? 'navFeatures'} size={16} />
+                  {link.label}
+                </a>
+              ))}
+            </nav>
+            {
+              showChooser ? (
+                <Button type="button" variant="primary" class="w-full justify-center" aria-label={t.ui.checkoutAria} data-checkout-open={dialogId}>
+                  {t.ui.browseCheatsMobile}
+                </Button>
+              ) : (
+                <Button
+                  as="a"
+                  href={purchaseHref}
+                  variant="primary"
+                  class="w-full justify-center"
+                  aria-label={t.ui.checkoutAria}
+                  rel="sponsored noopener noreferrer"
+                  target="_blank"
+                >
+                  {t.ui.browseCheatsMobile}
+                </Button>
+              )
+            }
+            <div class="flex justify-center pt-1">
+              <AnimatedThemeSwitch size="sm" ariaLabel={t.ui.themeLight} />
+            </div>
+          </SheetContent>
+        </Sheet>
+      </div>
     </div>
   </div>
+
+  {
+    showChooser ? (
+      <dialog
+        id={dialogId}
+        class="fixed inset-0 z-[100] max-h-[min(90vh,28rem)] w-[calc(100%-2rem)] max-w-md translate-x-[-50%] translate-y-[-50%] rounded-2xl border border-border bg-background p-6 text-foreground shadow-lg backdrop:bg-black/60 open:flex open:flex-col dark:border-white/10"
+        style="top: 50%; left: 50%;"
+        aria-labelledby={`${dialogId}-title`}
+      >
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <h2 id={`${dialogId}-title`} class="font-[family-name:var(--font-heading)] text-lg font-semibold">
+              {t.ui.checkoutChooseTitle}
+            </h2>
+            <p class="mt-1 text-sm text-muted-foreground">{t.ui.checkoutChooseDescription}</p>
+          </div>
+          <button
+            type="button"
+            class="inline-flex size-9 shrink-0 items-center justify-center rounded-lg border border-border/80 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            aria-label={t.ui.dialogClose}
+            data-checkout-dialog-close
+          >
+            <Icon name="x" size={18} />
+          </button>
+        </div>
+        <div class="mt-6 flex flex-col gap-2">
+          {chooserLinks.map((item) => (
+            <Button
+              as="a"
+              href={checkoutPath(item.product)}
+              variant="primary"
+              class="w-full justify-center"
+              size="lg"
+              data-checkout-pick
+              rel="sponsored noopener noreferrer"
+              target="_blank"
+            >
+              {item.label}
+              <Icon name="arrowRight" size={18} />
+            </Button>
+          ))}
+        </div>
+        <p class="mt-4 text-xs leading-relaxed text-muted-foreground">{t.ui.checkoutAffiliateDisclosure}</p>
+      </dialog>
+    ) : null
+  }
+
+  {
+    showChooser ? (
+      <script is:inline>
+        (function () {
+          var id = 'header-checkout-chooser';
+          var dlg = document.getElementById(id);
+          if (!dlg || !(dlg instanceof HTMLDialogElement)) return;
+          function openDlg() {
+            try {
+              dlg.showModal();
+            } catch (e) {}
+          }
+          function closeDlg() {
+            dlg.close();
+          }
+          document.querySelectorAll('[data-checkout-open="' + id + '"]').forEach(function (el) {
+            el.addEventListener('click', openDlg);
+          });
+          dlg.querySelectorAll('[data-checkout-dialog-close]').forEach(function (el) {
+            el.addEventListener('click', closeDlg);
+          });
+          dlg.querySelectorAll('[data-checkout-pick]').forEach(function (el) {
+            el.addEventListener('click', closeDlg);
+          });
+          dlg.addEventListener('click', function (e) {
+            if (e.target === dlg) closeDlg();
+          });
+          dlg.addEventListener('cancel', function (e) {
+            e.preventDefault();
+            closeDlg();
+          });
+        })();
+      </script>
+    ) : null
+  }
 </header>

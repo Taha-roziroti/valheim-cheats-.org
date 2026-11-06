@@ -16,9 +16,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/starwind/table';
+import { padMetaDescription, padPageTitle } from '../../../utils/metaPad';
 
 const utilities = productPages.filter((p) => p.kind === 'utility');
-const seo = resolvePageSeo('/products/dota-2-cheats/utilities/');
+const rawSeo = resolvePageSeo('/products/dota-2-cheats/utilities/');
+const seo = { title: padPageTitle(rawSeo.title), description: padMetaDescription(rawSeo.description) };
 const breadcrumbs = [
   { name: 'Home', path: '/' },
   { name: 'Products', path: productHub.path },

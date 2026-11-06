@@ -9,8 +9,10 @@ import { breadcrumbSchema, collectionPageSchema, itemListSchema } from '../../..
 import Breadcrumbs from '../../../components/Breadcrumbs.astro';
 import CatalogCard from '../../../components/CatalogCard.astro';
 import { productPath } from '../../../utils/path';
+import { padMetaDescription, padPageTitle } from '../../../utils/metaPad';
 
-const seo = resolvePageSeo('/products/dota-2-cheats/');
+const rawSeo = resolvePageSeo('/products/dota-2-cheats/');
+const seo = { title: padPageTitle(rawSeo.title), description: padMetaDescription(rawSeo.description) };
 const breadcrumbs = [
   { name: 'Home', path: '/' },
   { name: 'Products', path: productHub.path },

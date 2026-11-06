@@ -6,6 +6,7 @@ import Icon from '../../components/icons/Icon.astro';
 import { forumPosts, getForumPost } from '../../data/forum';
 import { pageTitle } from '../../config/seo';
 import { breadcrumbSchema, discussionForumPostingSchema } from '../../utils/schema';
+import { padMetaDescription, padPageTitle } from '../../utils/metaPad';
 
 export function getStaticPaths() {
   return forumPosts.map((post) => ({ params: { slug: post.slug } }));
@@ -21,7 +22,7 @@ const relatedPosts = [
 ].slice(0, 3);
 ---
 
-<BaseLayout title={pageTitle(post.title)} description={post.excerpt} jsonLd={[
+<BaseLayout title={padPageTitle(pageTitle(post.title))} description={padMetaDescription(post.excerpt)} jsonLd={[
   discussionForumPostingSchema({ name: post.title, text: post.body.join('\n\n'), url: path, author: post.author, comments: post.commentsCount }),
   breadcrumbSchema(breadcrumbs),
 ]}>

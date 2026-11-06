@@ -1,0 +1,4 @@
+{
+  "version": 1,
+  "exclude": ["/sitemap.xml", "/robots.txt", "/sitemap.css"]
+}

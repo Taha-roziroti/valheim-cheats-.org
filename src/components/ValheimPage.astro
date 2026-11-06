@@ -1,0 +1,140 @@
+---
+import type { ValheimSeoPage } from '../data/valheimContent';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { padMetaDescription, padPageTitle } from '../utils/metaPad';
+import Breadcrumbs from './Breadcrumbs.astro';
+import { Prose } from '@/components/starwind/prose';
+import { breadcrumbSchema, valheimProductSchema, webPageSchema } from '../utils/schema';
+
+interface Props {
+  page: ValheimSeoPage;
+  /** Second crumb when not the homepage */
+  breadcrumbLabel?: string;
+  /** Extra JSON-LD for homepage (e.g. WebSite) */
+  extraJsonLd?: Record<string, unknown>[];
+}
+
+const { page, breadcrumbLabel, extraJsonLd = [] } = Astro.props;
+
+const isHome = page.slug === '/';
+
+const breadcrumbs = isHome
+  ? [{ name: 'Home', path: '/' }]
+  : [
+      { name: 'Home', path: '/' },
+      { name: breadcrumbLabel ?? page.h1, path: page.slug },
+    ];
+
+const jsonLd: Record<string, unknown>[] = [
+  ...extraJsonLd,
+  webPageSchema({
+    name: page.titleTag,
+    description: page.metaDescription,
+    url: page.slug,
+  }),
+  breadcrumbSchema(breadcrumbs),
+];
+
+if (isHome || page.slug === '/valheim-esp/') {
+  jsonLd.push(valheimProductSchema());
+}
+---
+
+<BaseLayout title={padPageTitle(page.titleTag)} description={padMetaDescription(page.metaDescription)} jsonLd={jsonLd}>
+  <article class="border-b border-border bg-muted/10 py-8 md:py-12">
+    <div class="mx-auto max-w-3xl px-5">
+      {
+        !isHome ? (
+          <Breadcrumbs items={breadcrumbs} />
+        ) : (
+          <nav class="text-sm text-muted-foreground" aria-label="Breadcrumb">
+            <span class="text-foreground">Home</span>
+          </nav>
+        )
+      }
+
+      <header class="mt-6 space-y-4">
+        <h1 class="text-3xl font-bold tracking-tight md:text-4xl">{page.h1}</h1>
+        <div class="space-y-4 text-base leading-relaxed text-muted-foreground">
+          {page.intro.map((p) => (
+            <p>{p}</p>
+          ))}
+        </div>
+      </header>
+    </div>
+  </article>
+
+  <div class="mx-auto max-w-3xl px-5 py-10 md:py-14">
+    <Prose class="max-w-none">
+      {
+        page.sections.map((section) => (
+          <section class="mt-10 first:mt-0">
+            <h2>{section.heading}</h2>
+            {section.paragraphs.map((paragraph) => (
+              <p>{paragraph}</p>
+            ))}
+            {section.bullets && section.bullets.length > 0 ? (
+              <ul class="not-prose mt-4 list-none space-y-3 pl-0">
+                {section.bullets.map((b) => (
+                  <li class="flex gap-2 text-sm leading-relaxed text-muted-foreground">
+                    <span class="mt-1.5 size-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
+                    <span>
+                      <strong class="font-medium text-foreground">{b.label}</strong>
+                      {' — '}
+                      {b.text}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </section>
+        ))
+      }
+    </Prose>
+
+    <section class="mt-14 border-t border-border pt-10" aria-labelledby="valheim-internal-nav">
+      <h2 id="valheim-internal-nav" class="text-lg font-semibold">
+        {isHome ? 'Explore this site' : 'Related pages'}
+      </h2>
+      <ul class="not-prose mt-4 space-y-2">
+        {
+          page.internalLinks.map((link) => (
+            <li>
+              <a href={link.href} class="text-primary underline-offset-4 hover:underline">
+                {link.anchor}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="mt-14 border-t border-border pt-10" aria-labelledby="valheim-faq">
+      <h2 id="valheim-faq" class="text-lg font-semibold">
+        Frequently asked questions
+      </h2>
+      <dl class="not-prose mt-6 space-y-8">
+        {
+          page.faq.map((item) => (
+            <div>
+              <dt class="font-medium text-foreground">{item.question}</dt>
+              <dd class="mt-2 text-sm leading-relaxed text-muted-foreground">{item.answer}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </section>
+
+    <section class="not-prose mt-14 border-t border-border pt-10" aria-labelledby="valheim-image-alt">
+      <h2 id="valheim-image-alt" class="text-lg font-semibold">
+        Image alt text patterns
+      </h2>
+      <p class="mt-2 text-sm text-muted-foreground">
+        Use these as guidance when adding screenshots or feature images to this page.
+      </p>
+      <ul class="mt-4 list-disc space-y-2 pl-5 text-sm text-muted-foreground">
+        {page.imageAltPatterns.map((pattern) => <li>{pattern}</li>)}
+      </ul>
+    </section>
+  </div>
+</BaseLayout>

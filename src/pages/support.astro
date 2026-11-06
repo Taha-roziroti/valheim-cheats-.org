@@ -5,8 +5,10 @@ import { resolvePageSeo } from '../config/seo';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import ContactSupportSection from '../components/ContactSupportSection.astro';
 import { breadcrumbSchema, webPageSchema } from '../utils/schema';
+import { padMetaDescription, padPageTitle } from '../utils/metaPad';
 
-const seo = resolvePageSeo('/support/');
+const rawSeo = resolvePageSeo('/support/');
+const seo = { title: padPageTitle(rawSeo.title), description: padMetaDescription(rawSeo.description) };
 ---
 
 <BaseLayout

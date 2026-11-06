@@ -4,9 +4,11 @@ import { t } from '../i18n';
 import { resolvePageSeo } from '../config/seo';
 import LegalPage from '../components/LegalPage.astro';
 import { breadcrumbSchema, webPageSchema } from '../utils/schema';
+import { padMetaDescription, padPageTitle } from '../utils/metaPad';
 
 const content = t.legalPages.privacy;
-const seo = resolvePageSeo('/privacy/');
+const rawSeo = resolvePageSeo('/privacy/');
+const seo = { title: padPageTitle(rawSeo.title), description: padMetaDescription(rawSeo.description) };
 ---
 
 <BaseLayout

@@ -1,7 +1,7 @@
 {
-  "name": "DotaCheats",
-  "short_name": "DotaCheats",
-  "description": "Dota 2 cheats with scripts, map hack, zoom hack and skin changer for PC.",
+  "name": "ValheimCheats",
+  "short_name": "ValheimCheats",
+  "description": "Valheim cheats for Windows PC: ESP, pricing, Cloud DMA setup, and console commands.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

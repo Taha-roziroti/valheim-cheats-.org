@@ -15,6 +15,7 @@ import {
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import JsonLd from '../components/JsonLd.astro';
+import { organizationSchema, websiteSchema } from '../utils/schema';
 
 interface Props {
   title?: string;
@@ -42,13 +43,16 @@ const {
 
 const canonical = canonicalUrl(Astro.url.pathname);
 const ogImageUrl = absoluteAssetUrl(ogImage);
+const baseGraphLd = [organizationSchema(), websiteSchema()];
+const pageGraphLd = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+const mergedJsonLd = [...baseGraphLd, ...pageGraphLd];
 const robotsContent = noindex
   ? 'noindex, nofollow'
   : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
 ---
 
 <!doctype html>
-<html lang="en" class="dark fonts-pending">
+<html lang="en-US" class="dark fonts-pending">
   <head>
     <meta charset="UTF-8" />
     <script is:inline>
@@ -69,8 +73,7 @@ const robotsContent = noindex
     <meta name="googlebot" content={robotsContent} />
     <meta name="theme-color" content="#7F3DEE" />
     <link rel="canonical" href={canonical} />
-    <link rel="alternate" hreflang="en" href={canonical} />
-    <link rel="alternate" hreflang="x-default" href={canonical} />
+    <link rel="image_src" href={ogImageUrl} />
     <link
       rel="alternate"
       type="application/rss+xml"
@@ -133,13 +136,13 @@ const robotsContent = noindex
       />
     </noscript>
 
-    {jsonLd && <JsonLd data={jsonLd} />}
+    {mergedJsonLd.length > 0 && <JsonLd data={mergedJsonLd} />}
     <slot name="head" />
 
   </head>
   <body class="min-h-screen bg-background text-foreground">
     <button type="button" class="skip-link" data-skip-to-main>{t.ui.skipLink}</button>
-    <Header />
+    <Header pathname={Astro.url.pathname} />
     <main id="main-content">
       <slot />
     </main>

@@ -18,7 +18,15 @@ const { title, html, href } = Astro.props;
   <div class="blog-post-cta__body">
     <h3 class="blog-post-cta__title">{title}</h3>
     <div class="blog-post-cta__text" set:html={html} />
-    <Button as="a" href={href} variant="primary" size="sm" class="blog-post-cta__btn justify-start">
+    <Button
+      as="a"
+      href={href}
+      variant="primary"
+      size="sm"
+      class="blog-post-cta__btn justify-start"
+      rel="sponsored noopener noreferrer"
+      target="_blank"
+    >
       Buy now
       <Icon name="arrowRight" size={16} />
     </Button>
