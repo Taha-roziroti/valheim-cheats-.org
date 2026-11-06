@@ -25,7 +25,7 @@ const faqs = getAllFaqs();
     webPageSchema({
       name: 'FAQ — ValheimCheats',
       description:
-        'Answers about Valheim ESP, pricing, Cloud DMA, cheat tiers, and checkout linked from valheimcheats.org.',
+        'Answers about Valheim ESP, pricing, Cloud DMA, console commands, and checkout on valheimcheats.org.',
       url: '/faq/',
     }),
     faqPageSchema(faqs.map((f, i) => ({ num: String(i + 1).padStart(2, '0'), q: f.q, a: f.a.replace(/<[^>]+>/g, '') }))),
@@ -38,8 +38,8 @@ const faqs = getAllFaqs();
       <div class="mt-6">
         <SectionHeader
           eyebrow="Help center"
-          title="FAQ for cheats, products & guides"
-          desc="Everything about Lite, Pro, Elite tiers, utilities, safety and blog topics—in one place."
+          title="Valheim cheats FAQ"
+          desc="ESP, pricing, Cloud DMA, built-in console commands, safety, and setup — in one place."
           titleId="faq-page-title"
           heading="h1"
         />

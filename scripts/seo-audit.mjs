@@ -601,7 +601,7 @@ async function main() {
     const shotDir = path.join(root, '.audit-screenshots');
     fs.mkdirSync(shotDir, { recursive: true });
     const viewports = [375, 768, 1024, 1440];
-    const pathsToShot = ['/', '/valheim-esp/', '/faq/', '/blog/', '/dota/'];
+    const pathsToShot = ['/', '/valheim-esp/', '/valheim-cloud-dma/', '/faq/'];
     serveProc = await startServe();
     try {
       const baseUrl = `http://127.0.0.1:${PORT}`;

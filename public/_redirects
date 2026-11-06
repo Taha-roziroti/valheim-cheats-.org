@@ -3,3 +3,21 @@
 /buy-valheim-cheat/   /valheim-esp/   301
 /valheim-hacks/   /   301
 /dotacheats/   /   301
+
+# Legacy template routes (removed — send to Valheim hub or checkout)
+/dota/   /   301
+/blog/   /   301
+/forum/   /   301
+/cheats/   /   301
+/cheats/lite/   /   301
+/cheats/pro/   /   301
+/cheats/elite/   /   301
+/cheats/compare/   /   301
+/products/dota-2-cheats/   /   301
+/products/dota-2-cheats/lite/   /   301
+/products/dota-2-cheats/pro/   /   301
+/products/dota-2-cheats/elite/   /   301
+/products/dota-2-cheats/utilities/   /   301
+/go/dota-2/   /go/valheim/   301
+/go/skin-changer/   /go/valheim/   301
+/go/ugc/   /go/valheim/   301

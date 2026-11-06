@@ -3,18 +3,18 @@ import path from 'node:path';
 import sharp from 'sharp';
 
 const root = process.cwd();
-const sourcePng = path.join(root, 'public', 'images', 'gameplay', 'dota-2-map-hack.png');
+const sourceWebp = path.join(root, 'public', 'images', 'hero', 'valheim-promo-hero.webp');
 const outDir = path.join(root, 'public', 'og');
 const outJpg = path.join(outDir, 'default.jpg');
 
 fs.mkdirSync(outDir, { recursive: true });
 
-if (!fs.existsSync(sourcePng)) {
-  console.error(`generate-seo-assets: source missing: ${path.relative(root, sourcePng)}`);
+if (!fs.existsSync(sourceWebp)) {
+  console.error(`generate-seo-assets: source missing: ${path.relative(root, sourceWebp)}`);
   process.exit(1);
 }
 
-await sharp(sourcePng)
+await sharp(sourceWebp)
   .resize(1200, 630, { fit: 'cover', position: 'centre' })
   .jpeg({ quality: 88, mozjpeg: true })
   .toFile(outJpg);

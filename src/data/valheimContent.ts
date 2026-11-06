@@ -63,7 +63,7 @@ export const valheimSeoPages: Record<string, ValheimSeoPage> = {
     titleTag: 'Valheim Cheats for PC | ESP Features & Setup',
     metaDescription:
       'Explore Valheim cheats for Windows PC, see player and resource ESP features, compare plans, and review the setup requirements.',
-    h1: 'Valheim Cheats for Windows PC',
+    h1: 'Valheim Cheats',
     primaryKeyword: 'Valheim cheats',
     secondaryKeywords: [
       'Valheim hacks',

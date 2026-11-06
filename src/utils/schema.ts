@@ -1,4 +1,3 @@
-import type { FaqItem } from '../i18n/types';
 import { SITE_BRAND_NAME, SUPPORT_EMAIL } from '../config/site';
 import { DEFAULT_OG_IMAGE, SITE_ORIGIN, absoluteAssetUrl, canonicalUrl, getOrganizationSameAs } from '../config/seo';
 import { SITE_PURPOSE, SITE_KNOWS_ABOUT } from '../data/siteIdentity';
@@ -128,7 +127,7 @@ export function webPageSchema(input: { name: string; description: string; url: s
   };
 }
 
-export function faqPageSchema(items: FaqItem[]) {
+export function faqPageSchema(items: { q: string; a: string }[]) {
   return {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
@@ -153,29 +152,6 @@ export function itemListSchema(items: { name: string; url: string }[]) {
       name: item.name,
       url: canonicalUrl(item.url),
     })),
-  };
-}
-
-export function discussionForumPostingSchema(input: {
-  name: string;
-  text: string;
-  url: string;
-  author: string;
-  comments: number;
-}) {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'DiscussionForumPosting',
-    headline: input.name,
-    articleBody: input.text,
-    url: canonicalUrl(input.url),
-    author: { '@type': 'Person', name: input.author },
-    commentCount: input.comments,
-    isPartOf: {
-      '@type': 'CollectionPage',
-      name: `${SITE_BRAND_NAME} Community Forum`,
-      url: canonicalUrl('/forum/'),
-    },
   };
 }
 
@@ -233,45 +209,3 @@ export function softwareApplicationSchema(input: {
   });
 }
 
-export function articleSchema(input: {
-  name: string;
-  description: string;
-  url: string;
-  image: string;
-  datePublished: string;
-  dateModified?: string;
-}) {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'BlogPosting',
-    headline: input.name,
-    description: input.description,
-    url: canonicalUrl(input.url),
-    image: absoluteAssetUrl(input.image),
-    datePublished: input.datePublished,
-    dateModified: input.dateModified ?? input.datePublished,
-    inLanguage: 'en-US',
-    author: {
-      '@type': 'Organization',
-      name: SITE_BRAND_NAME,
-    },
-    publisher: {
-      '@type': 'Organization',
-      name: SITE_BRAND_NAME,
-      logo: {
-        '@type': 'ImageObject',
-        url: `${SITE_ORIGIN}/logo.svg`,
-      },
-    },
-    mainEntityOfPage: {
-      '@type': 'WebPage',
-      '@id': canonicalUrl(input.url),
-    },
-  };
-}
-
-export function parseBlogDate(date: string): string {
-  const parsed = Date.parse(date);
-  if (Number.isNaN(parsed)) return new Date().toISOString().slice(0, 10);
-  return new Date(parsed).toISOString().slice(0, 10);
-}

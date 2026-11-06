@@ -10,7 +10,7 @@ export const DEFAULT_OG_IMAGE = SITE_OG_IMAGE_PATH;
 
 export const GA_MEASUREMENT_ID = import.meta.env.PUBLIC_GA_MEASUREMENT_ID as string | undefined;
 
-/** @example @dotacheats */
+/** @example @valheimcheats */
 export const TWITTER_SITE = import.meta.env.PUBLIC_TWITTER_SITE as string | undefined;
 
 export const TWITTER_CREATOR = import.meta.env.PUBLIC_TWITTER_CREATOR as string | undefined;
@@ -56,8 +56,6 @@ export function pageTitle(keyword: string, brand = t.site.name): string {
 
 export const DEFAULT_OG_IMAGE_WIDTH = 1200;
 export const DEFAULT_OG_IMAGE_HEIGHT = 630;
-
-export const RSS_FEED_PATH = '/rss.xml';
 
 /** Used by IndexNow postbuild script. */
 export const INDEXNOW_HOST = INDEXNOW_HOST_NAME;

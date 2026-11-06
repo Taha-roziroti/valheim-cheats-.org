@@ -45,7 +45,6 @@ export const SEO_ROUTE_INTENTS: Record<string, string> = {
   '/valheim-cheats-pricing/': 'Valheim cheats price, monthly vs lifetime, Cloud DMA cost context',
   '/valheim-cloud-dma/': 'Cloud DMA for Valheim, Hyper-V, virtualization, separate purchases',
   '/valheim-console-commands/': 'Valheim devcommands, god mode, fly, spawn — built-in console only',
-  '/dota/': 'Legacy Dota 2 template hub (historical content)',
   '/faq/': 'Site-wide FAQ and support topics',
 };
 

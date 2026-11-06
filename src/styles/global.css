@@ -780,19 +780,3 @@ html:not(.dark) .deployment-cta-secondary:hover {
   background: color-mix(in oklch, var(--muted) 50%, transparent);
   border-top: 1px solid var(--border);
 }
-
-
-@keyframes hero-embla-progress {
-  from {
-    width: 0%;
-  }
-  to {
-  width: 100%;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-embla-progress {
-    animation: none !important;
-  }
-}

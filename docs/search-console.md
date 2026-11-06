@@ -1,29 +1,20 @@
-# Search Console workflow (dotacheats.com)
+# Search Console workflow (valheimcheats.org)
 
-You verify the domain at your DNS provider—no HTML meta tags in the repo.
+Use this checklist when verifying indexing and sitemaps for the Valheim-only site.
 
-## Setup (once)
+## Initial setup
 
-1. Open [Google Search Console](https://search.google.com/search-console) and add the **domain** property for `dotacheats.com` if it is not already there.
-2. Under **Sitemaps**, submit: `https://dotacheats.com/sitemap.xml`
-3. Repeat in [Bing Webmaster Tools](https://www.bing.com/webmasters) if you use Bing.
+1. Open [Google Search Console](https://search.google.com/search-console) and add the **URL prefix** or **domain** property for `valheimcheats.org` if it is not already there.
+2. Under **Sitemaps**, submit: `https://valheimcheats.org/sitemap.xml`
 
-## Monthly tune (15 minutes)
+## Priority URLs
 
-1. Search Console → **Performance** → **Search results**.
-2. Sort by **Impressions** (last 28 days).
-3. For each query that already maps to a page on your site, open the matching path in [`src/config/pageSeo.ts`](../src/config/pageSeo.ts).
-4. Adjust `title` and `description` so the primary query appears naturally in the title (keep under ~60 characters for the title where possible).
-5. Deploy. Allow 1–2 weeks before judging click-through changes.
+| Intent | URL |
+| --- | --- |
+| Brand / home | `/` |
+| Product — ESP | `/valheim-esp/` |
+| Pricing | `/valheim-cheats-pricing/` |
+| Cloud DMA | `/valheim-cloud-dma/` |
+| Console commands | `/valheim-console-commands/` |
 
-## Path cheat sheet
-
-| Common query intent | Edit path in `pageSeo.ts` |
-| ------------------- | ------------------------- |
-| dota 2 cheats (broad) | `/` |
-| lite / pro / elite | `/cheats/compare/`, `/cheats/lite/`, etc. |
-| map hack, scripts | `/cheats/pro/`, blog posts (titles set per article) |
-| hwid, skin changer | `/products/dota-2-cheats/utilities/` |
-| purchase / refund | `/terms/`, `/contact/` |
-
-Product and blog article pages still use their own titles from content; add entries to `PAGE_SEO` only when you want a fixed override for a specific pathname.
+After a major content change, use **URL inspection** on the homepage and one money page, then request indexing if needed.

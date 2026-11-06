@@ -35,9 +35,7 @@ const navIcons: Record<string, IconName> = {
   'Valheim ESP': 'navProducts',
   Pricing: 'navFaq',
   Console: 'navSupport',
-  'Dota hub': 'navProducts',
-  Blog: 'navBlog',
-  Forum: 'messageCircle',
+  'Cloud DMA': 'navFeatures',
   FAQ: 'navFaq',
   Support: 'navSupport',
 };
@@ -172,7 +170,7 @@ const dialogId = 'header-checkout-chooser';
     showChooser ? (
       <dialog
         id={dialogId}
-        class="fixed inset-0 z-[100] max-h-[min(90vh,28rem)] w-[calc(100%-2rem)] max-w-md translate-x-[-50%] translate-y-[-50%] rounded-2xl border border-border bg-background p-6 text-foreground shadow-lg backdrop:bg-black/60 open:flex open:flex-col dark:border-white/10"
+        class="pointer-events-auto fixed inset-0 z-[100] max-h-[min(90vh,28rem)] w-[calc(100%-2rem)] max-w-md translate-x-[-50%] translate-y-[-50%] rounded-2xl border border-border bg-background p-6 text-foreground shadow-lg backdrop:bg-black/60 open:flex open:flex-col dark:border-white/10"
         style="top: 50%; left: 50%;"
         aria-labelledby={`${dialogId}-title`}
       >
@@ -209,7 +207,6 @@ const dialogId = 'header-checkout-chooser';
             </Button>
           ))}
         </div>
-        <p class="mt-4 text-xs leading-relaxed text-muted-foreground">{t.ui.checkoutAffiliateDisclosure}</p>
       </dialog>
     ) : null
   }

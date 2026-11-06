@@ -43,16 +43,16 @@ const {
 
 const topicLabels: Record<FaqTopic, string> = {
   all: 'All',
-  plans: 'Plans',
-  esp: 'Map hack / ESP',
-  scripts: 'Scripts',
+  esp: 'ESP',
+  pricing: 'Pricing',
+  dma: 'Cloud DMA',
+  console: 'Console',
   safety: 'Safety',
-  products: 'Products',
-  blog: 'Blog',
   setup: 'Setup',
 };
 
-const filters = filterTopics ?? (['all', 'plans', 'esp', 'scripts', 'safety', 'products'] as FaqTopic[]);
+const filters =
+  filterTopics ?? (['all', 'esp', 'pricing', 'dma', 'console', 'safety', 'setup'] as FaqTopic[]);
 ---
 
 <section
