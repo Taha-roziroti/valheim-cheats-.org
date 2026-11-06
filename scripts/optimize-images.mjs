@@ -7,6 +7,7 @@ const widths = [320, 400, 512, 640, 960];
 const dirs = [
   'public/images/gameplay',
   'public/images/blog',
+  'public/images/product',
 ];
 
 async function optimizeDir(relativeDir) {

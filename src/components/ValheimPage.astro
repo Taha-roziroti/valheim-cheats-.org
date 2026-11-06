@@ -17,6 +17,7 @@ interface Props {
 const { page, breadcrumbLabel, extraJsonLd = [] } = Astro.props;
 
 const isHome = page.slug === '/';
+const hero = page.heroImage;
 
 const breadcrumbs = isHome
   ? [{ name: 'Home', path: '/' }]
@@ -38,11 +39,52 @@ const jsonLd: Record<string, unknown>[] = [
 if (isHome || page.slug === '/valheim-esp/') {
   jsonLd.push(valheimProductSchema());
 }
+
+const layoutOgImage = isHome && hero ? hero.src : undefined;
+const layoutOgAlt = isHome && hero ? hero.alt : undefined;
+const layoutOgWidth = isHome && hero ? hero.width : undefined;
+const layoutOgHeight = isHome && hero ? hero.height : undefined;
 ---
 
-<BaseLayout title={padPageTitle(page.titleTag)} description={padMetaDescription(page.metaDescription)} jsonLd={jsonLd}>
-  <article class="border-b border-border bg-muted/10 py-8 md:py-12">
-    <div class="mx-auto max-w-3xl px-5">
+<BaseLayout
+  title={padPageTitle(page.titleTag)}
+  description={padMetaDescription(page.metaDescription)}
+  jsonLd={jsonLd}
+  ogImage={layoutOgImage}
+  ogImageAlt={layoutOgAlt}
+  ogImageWidth={layoutOgWidth}
+  ogImageHeight={layoutOgHeight}
+>
+  {
+    isHome && hero ? (
+      <link
+        slot="head"
+        rel="preload"
+        as="image"
+        href={hero.src}
+        type="image/webp"
+        fetchpriority="high"
+      />
+    ) : null
+  }
+  <article class="border-b border-border bg-muted/10">
+    {
+      isHome && hero ? (
+        <div class="w-full border-b border-border">
+          <img
+            src={hero.src}
+            alt={hero.alt}
+            width={hero.width}
+            height={hero.height}
+            loading="eager"
+            decoding="async"
+            fetchpriority="high"
+            class="aspect-[16/9] max-h-[min(50vh,520px)] w-full object-cover object-[center_35%]"
+          />
+        </div>
+      ) : null
+    }
+    <div class="mx-auto max-w-3xl px-5 py-8 md:py-12">
       {
         !isHome ? (
           <Breadcrumbs items={breadcrumbs} />
@@ -63,6 +105,53 @@ if (isHome || page.slug === '/valheim-esp/') {
       </header>
     </div>
   </article>
+
+  {
+    page.productScreenshots && page.productScreenshots.length > 0 ? (
+      <section
+        class="border-b border-border bg-muted/10 py-8 md:py-10"
+        aria-labelledby="valheim-product-shots"
+      >
+        <div class="mx-auto max-w-5xl px-5">
+          <h2 id="valheim-product-shots" class="text-lg font-semibold">
+            Product interface
+          </h2>
+          <p class="mt-2 max-w-2xl text-sm text-muted-foreground">
+            Screenshots of the Valheim client menu from the supported build. Exact labels and layout may change with updates.
+          </p>
+          <div
+            class:list={[
+              'mt-6 grid gap-6',
+              page.productScreenshots.length >= 3
+                ? 'sm:grid-cols-2 lg:grid-cols-3'
+                : page.productScreenshots.length === 2
+                  ? 'sm:grid-cols-2'
+                  : 'grid-cols-1',
+            ]}
+          >
+            {page.productScreenshots.map((shot, i) => (
+              <figure class="overflow-hidden rounded-xl border border-border bg-background shadow-sm">
+                <img
+                  src={shot.src}
+                  alt={shot.alt}
+                  width={shot.width}
+                  height={shot.height}
+                  loading="lazy"
+                  decoding="async"
+                  class="h-auto w-full"
+                />
+                {shot.caption ? (
+                  <figcaption class="border-t border-border px-3 py-2 text-center text-xs text-muted-foreground">
+                    {shot.caption}
+                  </figcaption>
+                ) : null}
+              </figure>
+            ))}
+          </div>
+        </div>
+      </section>
+    ) : null
+  }
 
   <div class="mx-auto max-w-3xl px-5 py-10 md:py-14">
     <Prose class="max-w-none">

@@ -18,6 +18,23 @@ export type ValheimFaq = {
   answer: string;
 };
 
+export type ValheimProductScreenshot = {
+  /** Absolute site path to WebP (e.g. /images/product/…webp) */
+  src: string;
+  width: number;
+  height: number;
+  alt: string;
+  caption?: string;
+};
+
+/** Wide hero banner (e.g. homepage only) */
+export type ValheimHeroImage = {
+  src: string;
+  width: number;
+  height: number;
+  alt: string;
+};
+
 export type ValheimSeoPage = {
   slug: string;
   titleTag: string;
@@ -30,6 +47,10 @@ export type ValheimSeoPage = {
   faq: ValheimFaq[];
   internalLinks: { href: string; anchor: string }[];
   imageAltPatterns: string[];
+  /** Optional in-client product UI screenshots */
+  productScreenshots?: ValheimProductScreenshot[];
+  /** Optional top-of-page hero (typically homepage) */
+  heroImage?: ValheimHeroImage;
 };
 
 export const valheimSeoPages: Record<string, ValheimSeoPage> = {
@@ -49,6 +70,13 @@ export const valheimSeoPages: Record<string, ValheimSeoPage> = {
       'Valheim cheats for PC',
       'Valheim cheat menu',
     ],
+
+    heroImage: {
+      src: '/images/hero/valheim-promo-hero.webp',
+      width: 1024,
+      height: 576,
+      alt: 'Official Valheim game artwork: two Vikings on a grassy overlook facing a misty valley, snow-capped mountains, and the Valheim logo',
+    },
 
     intro: [
       'Valheim has a way of turning a simple trip into an entire expedition. You leave the base looking for a few resources, spot something interesting on the horizon, and suddenly the evening is spent exploring another stretch of the map. A little more information can make those journeys feel much more focused.',
@@ -150,6 +178,30 @@ export const valheimSeoPages: Record<string, ValheimSeoPage> = {
       'Valheim gameplay showing [verified ESP feature] in [biome]',
       'Valheim ESP overview showing [player, ore, boss, ship, or creature marker]',
       'Valheim Windows PC gameplay with [verified feature] visible',
+    ],
+
+    productScreenshots: [
+      {
+        src: '/images/product/valheim-menu-visuals.webp',
+        width: 1024,
+        height: 646,
+        alt: 'Valheim cheat client Visuals tab showing entity ESP options, creature ESP in biomes, distance slider, and ore and ship overlay toggles',
+        caption: 'Visuals — entity ESP, creature ESP, markers, and overlay options',
+      },
+      {
+        src: '/images/product/valheim-menu-world.webp',
+        width: 1024,
+        height: 646,
+        alt: 'Valheim cheat client World tab showing World ESP, Show Distance on, and World Distance slider at 150 meters',
+        caption: 'World — world ESP and distance settings',
+      },
+      {
+        src: '/images/product/valheim-menu-misc.webp',
+        width: 1024,
+        height: 646,
+        alt: 'Valheim cheat client Misc tab with stream-proof toggle, menu keys, and Cloud DMA and AWS connection status',
+        caption: 'Misc — stream-proof mode and cloud connection status',
+      },
     ],
   },
 
@@ -274,6 +326,23 @@ export const valheimSeoPages: Record<string, ValheimSeoPage> = {
       'Valheim boss ESP feature preview during [encounter]',
       'Valheim ship and creature ESP gameplay preview',
       'Valheim stream-proof overlay feature in Windows gameplay',
+    ],
+
+    productScreenshots: [
+      {
+        src: '/images/product/valheim-menu-visuals.webp',
+        width: 1024,
+        height: 646,
+        alt: 'Valheim cheat client Visuals tab showing entity ESP options, creature ESP in biomes, distance slider, and ore and ship overlay toggles',
+        caption: 'Visuals tab — ESP categories and overlay controls',
+      },
+      {
+        src: '/images/product/valheim-menu-world.webp',
+        width: 1024,
+        height: 646,
+        alt: 'Valheim cheat client World tab showing World ESP, Show Distance on, and World Distance slider at 150 meters',
+        caption: 'World tab — world ESP and distance',
+      },
     ],
   },
 
@@ -520,6 +589,16 @@ export const valheimSeoPages: Record<string, ValheimSeoPage> = {
       'Windows 11 virtualization settings used for Cloud DMA setup',
       'Cloud DMA system requirements checklist for Valheim',
       'Single-PC Cloud DMA architecture diagram',
+    ],
+
+    productScreenshots: [
+      {
+        src: '/images/product/valheim-menu-misc.webp',
+        width: 1024,
+        height: 646,
+        alt: 'Valheim cheat client Misc tab with stream-proof toggle and Cloud DMA and AWS shown as connected',
+        caption: 'In-client Cloud DMA and AWS status (Misc tab)',
+      },
     ],
   },
 
