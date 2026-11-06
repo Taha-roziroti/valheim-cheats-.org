@@ -10,7 +10,7 @@
     "generate:seo-assets": "node scripts/generate-seo-assets.mjs",
     "verify-seo": "node scripts/verify-seo.mjs",
     "verify-redirects": "node scripts/verify-redirects.mjs",
-    "build": "node scripts/optimize-images.mjs && node scripts/generate-seo-assets.mjs && astro build && node scripts/prune-dist-images.mjs && node scripts/finalize-sitemap.mjs && node scripts/verify-seo.mjs && node scripts/verify-redirects.mjs && node scripts/indexnow.mjs",
+    "build": "node scripts/optimize-images.mjs && node scripts/generate-seo-assets.mjs && node scripts/generate-favicon.mjs && astro build && node scripts/prune-dist-images.mjs && node scripts/finalize-sitemap.mjs && node scripts/verify-seo.mjs && node scripts/verify-redirects.mjs && node scripts/indexnow.mjs",
     "audit": "node scripts/seo-audit.mjs",
     "preview": "astro preview --host 0.0.0.0",
     "start": "node scripts/serve.mjs",

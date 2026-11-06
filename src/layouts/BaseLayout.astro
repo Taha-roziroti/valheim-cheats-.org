@@ -2,7 +2,6 @@
 import "@/styles/starwind.css";
 import { t } from '../i18n';
 import {
-  RSS_FEED_PATH,
   TWITTER_CREATOR,
   TWITTER_SITE,
   canonicalUrl,
@@ -81,18 +80,12 @@ const robotsContent = noindex
     <meta name="theme-color" content="#7F3DEE" />
     <link rel="canonical" href={canonical} />
     <link rel="image_src" href={ogImageUrl} />
-    <link
-      rel="alternate"
-      type="application/rss+xml"
-      title={`${t.site.name} Blog RSS`}
-      href={RSS_FEED_PATH}
-    />
     <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml" />
     <link rel="manifest" href="/site.webmanifest" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" href="/favicon.png" sizes="48x48" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
-    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="shortcut icon" href="/favicon-32.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
     <meta property="og:title" content={title} />
